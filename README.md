@@ -80,6 +80,14 @@ One dependency, and it's Flask. `catalog.py` fetches and parses the feed with
 | `templates/`, `static/` | the app itself |
 | `tools/` | catalog refresh scripts, build-time only, not deployed |
 
+The three columns are a grid, and the left and right ones are `position: sticky`
+capped to the viewport. A sticky grid item is constrained to its grid area, so the
+footer has to live *outside* `.shell` — as a final row of that grid it sat exactly
+where the columns come to rest at the bottom of the page, and the library stats
+painted over the credits. For the same reason `.col-left` scrolls internally: it is
+capped shorter than its own content on a short window, and visible overflow would
+just paint the lower panels outside the column.
+
 ## Refreshing the catalog
 
 `episodes.json` is a build-time artifact, not a runtime one:
