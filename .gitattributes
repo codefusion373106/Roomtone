@@ -1,0 +1,15 @@
+# Normalize line endings in the repository so behaviour does not depend on
+# each developer's core.autocrlf. Vercel builds on Linux, where autocrlf is
+# off, so a CRLF committed by a Windows dev would otherwise silently differ
+# between local and production.
+* text=auto eol=lf
+
+# Keep the MP3s binary even if a future rule ever matches them.
+*.mp3 binary
+
+# Vercel reads this file to pick the runtime; a stray CR can break parsing.
+.python-version text eol=lf
+
+# Local-only noise.
+__pycache__/ text
+*.py[cod] text
