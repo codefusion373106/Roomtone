@@ -89,11 +89,19 @@ episodes are published.
 Music and tracklists come from the [Music for Programming](https://musicforprogramming.net)
 podcast by Datashette. This is an unofficial player for it — no affiliation, and
 the audio is hotlinked from their CDN rather than rehosted, the same model as any
-podcast client.
+podcast client. That podcast is where this whole idea came from: Roomtone is
+built around their three-hour mixes as a focus session, and the credits in the
+footer say so.
 
 That last point is worth taking seriously: every visitor's playback is a request
 against Datashat's bandwidth. If this picks up real traffic, tell them rather than
 letting it happen quietly.
+
+## Credits
+
+- **Built by** CodeFusion — the developer behind Roomtone.
+- **Inspired by** [Music for Programming](https://musicforprogramming.net) by
+  Datashette, whose mixes this player streams.
 
 ## Configuration
 
