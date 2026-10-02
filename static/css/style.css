@@ -111,6 +111,18 @@ body {
   font-size: 13px;
 }
 
+/* Inline credit beside the wordmark, styled like the tagline so it reads as a
+   quieter sibling rather than part of the name itself. */
+.brand-by {
+  margin-left: 10px;
+  color: var(--ink-faint);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 /* ---------------------------------------------------------------- panels */
 
 .panel {
