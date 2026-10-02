@@ -18,6 +18,7 @@ app = Flask(__name__)
 APP_NAME = os.environ.get('MFP_APP_NAME', 'Roomtone')
 APP_TAGLINE = os.environ.get(
     'MFP_APP_TAGLINE', 'long-form mixes for quiet work')
+APP_DEV = os.environ.get("MFP_APP_DEV", "By CodeFusion")
 
 # Both /api/episodes?refresh=1 and POST /api/episodes/refresh force a fresh
 # upstream fetch, and neither is authenticated. Without a floor, a loop of them
@@ -52,7 +53,8 @@ def _too_soon():
 @app.route('/')
 def index():
     return render_template('index.html', app_name=APP_NAME,
-                           tagline=APP_TAGLINE)
+                           tagline=APP_TAGLINE,
+                           devname=APP_DEV)
 
 #api endpoint for the episode catalog, loaded from the hosted manifest
 @app.route('/api/episodes')
