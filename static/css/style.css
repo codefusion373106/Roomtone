@@ -111,6 +111,12 @@ body {
   font-size: 13px;
 }
 
+.brand-dev {
+  margin: 5px 0 0;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
 /* ---------------------------------------------------------------- panels */
 
 .panel {
