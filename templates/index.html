@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ tagline }}.">
+    <meta name="color-scheme" content="dark">
+    <title>{{ app_name }}</title>
+    <link rel="preconnect" href="https://datashat.net" crossorigin>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="grain" aria-hidden="true"></div>
+
+    <div class="shell">
+
+        <!-- LEFT COLUMN: identity, transport, focus timer -->
+        <aside class="col-left">
+            <header class="brand">
+                <h1 class="brand-name">{{ app_name }}</h1>
+                <p class="brand-tagline">{{ tagline }}</p>
+            </header>
+
+            <section class="panel transport">
+                <div class="transport-buttons">
+                    <button id="btn-rw"     class="icon-btn" title="Back 15s"  aria-label="Back 15 seconds">&#8630;</button>
+                    <button id="btn-play"   class="icon-btn primary" title="Play / pause" aria-label="Play or pause">&#9654;</button>
+                    <button id="btn-ff"     class="icon-btn" title="Forward 15s" aria-label="Forward 15 seconds">&#8631;</button>
+                    <button id="btn-random" class="icon-btn" title="Random episode" aria-label="Random episode">&#8635;</button>
+                </div>
+
+                <div class="volume" id="volume-container">
+                    <label class="control-label" for="vol">Volume</label>
+                    <input type="range" id="vol" min="0" max="100" value="100" step="1" aria-label="Volume">
+                    <output id="volume-level" class="readout">100%</output>
+                </div>
+
+                <div class="effects">
+                    <span class="control-label">Sound</span>
+                    <button id="btn-lofi" class="pill" title="Low-pass filter">low-fi</button>
+                    <button class="pill speed" data-speed="0.85">0.85&times;</button>
+                    <button class="pill speed active-spd" data-speed="1">1&times;</button>
+                    <button class="pill speed" data-speed="1.25">1.25&times;</button>
+                </div>
+                <p class="hint"><span id="dsp-status">ready</span></p>
+            </section>
+
+            <section class="panel timer-panel">
+                <div class="timer-face">
+                    <div id="timer-display" class="timer-digits">25:00</div>
+                    <div class="timer-meta">
+                        <span id="timer-phase">work</span>
+                        <span class="dot">&middot;</span>
+                        <span id="timer-cycle">1/4</span>
+                    </div>
+                </div>
+
+                <div id="timer-seek-bar" class="meter" role="presentation"></div>
+
+                <div class="timer-buttons">
+                    <button id="btn-timer-start" class="pill">Start</button>
+                    <button id="btn-timer-pause" class="pill is-quiet">Pause</button>
+                    <button id="btn-timer-reset" class="pill">Reset</button>
+                    <button id="btn-timer-skip"  class="pill">Skip</button>
+                </div>
+
+                <div class="presets">
+                    <span class="control-label">Presets</span>
+                    <div class="preset-row">
+                        <button class="pill preset" data-preset="25/5">25/5</button>
+                        <button class="pill preset" data-preset="50/10">50/10</button>
+                        <button class="pill preset" data-preset="15/3">15/3</button>
+                        <button class="pill preset" data-preset="90/15">90/15</button>
+                        <button id="btn-timer-custom" class="pill preset">Custom</button>
+                    </div>
+                </div>
+
+                <div id="custom-timer-panel" class="custom-timer">
+                    <label class="field"><span>Work</span><input type="number" id="ct-work" min="1" max="240" value="25"> min</label>
+                    <label class="field"><span>Break</span><input type="number" id="ct-break" min="1" max="120" value="5"> min</label>
+                    <label class="field"><span>Cycles</span><input type="number" id="ct-cycles" min="1" max="20" value="4"></label>
+                    <button id="btn-timer-apply" class="pill">Apply</button>
+                </div>
+            </section>
+
+            <section class="panel utility">
+                <div class="stats">
+                    <p id="stat-sessions">0 focus cycles</p>
+                </div>
+                <button id="btn-cmd" class="text-btn">
+                    Commands <kbd>Ctrl</kbd><kbd>K</kbd>
+                </button>
+            </section>
+        </aside>
+
+        <!-- CENTER COLUMN: now playing + waveform -->
+        <main class="col-center">
+            <div class="now-playing-head">
+                <p class="eyebrow">Now playing</p>
+                <h2 id="episode-title">Nothing selected</h2>
+                <div class="meta">
+                    <span id="play-status">Stopped</span>
+                    <span class="dot">&middot;</span>
+                    <span id="ep-duration">&mdash;&mdash;:&mdash;&mdash;</span>
+                    <span class="dot">&middot;</span>
+                    <span id="file-size">&mdash;</span>
+                </div>
+                <div class="meta">
+                    <span id="time-display">0:00 / 0:00</span>
+                </div>
+            </div>
+
+            <div class="stage">
+                <canvas id="waveform" class="waveform" width="1200" height="220"
+                        role="img" aria-label="Live audio waveform"></canvas>
+                <div id="seek-bar-container" class="scrub">
+                    <div class="scrub-track">
+                        <div class="scrub-fill"></div>
+                        <div class="scrub-head"></div>
+                    </div>
+                    <input type="range" id="scrub" min="0" max="1000" value="0" step="1"
+                           class="scrub-input" aria-label="Seek">
+                </div>
+            </div>
+
+            <section class="tracks">
+                <h3 class="eyebrow">Tracklist</h3>
+                <ol id="tracklist-container" class="tracklist"></ol>
+            </section>
+        </main>
+
+        <!-- RIGHT COLUMN: episode library -->
+        <aside class="col-right">
+            <div class="library-head">
+                <h2 class="eyebrow">Library <span id="ep-count" class="count">0</span></h2>
+                <div class="library-tools">
+                    <input type="search" id="ep-search" placeholder="Search mixes or tracks"
+                           autocomplete="off" spellcheck="false" aria-label="Search episodes">
+                    <button id="btn-refresh" class="pill is-quiet" title="Re-fetch the catalog">Refresh</button>
+                </div>
+                <p id="catalog-status" class="status">Loading catalog&hellip;</p>
+            </div>
+
+            <ul id="episodes-list" class="episodes"></ul>
+
+            <div class="stats library-stats">
+                <p id="stat-episodes">0 episodes</p>
+                <p id="stat-tracks">0 tracks</p>
+                <p id="stat-hours">0 hours</p>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- Command palette -->
+    <div id="cmd-palette" class="cmd-palette">
+        <div class="cmd-box" role="dialog" aria-modal="true" aria-label="Command palette">
+            <div class="cmd-header">{{ app_name }} commands <span class="hint-inline">Esc to close</span></div>
+            <div class="cmd-input-row">
+                <input type="text" id="cmd-input" placeholder="help, play 1, speed 1.25, timer start&hellip;"
+                       autocomplete="off" aria-label="Command">
+            </div>
+            <pre id="cmd-output" class="cmd-output">Type 'help' to view all commands.</pre>
+        </div>
+    </div>
+
+    <audio id="audio-player"></audio>
+    <script src="{{ url_for('static', filename='js/player.js') }}"></script>
+</body>
+</html>

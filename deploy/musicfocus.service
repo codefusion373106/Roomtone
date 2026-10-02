@@ -1,0 +1,46 @@
+[Unit]
+Description=Roomtone (Flask/gunicorn)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# Replace with the account that owns the checkout.
+User=musicfocus
+Group=musicfocus
+
+WorkingDirectory=/srv/musicfocus
+Environment="MFP_MANIFEST_URL=https://musicforprogramming.net/rss.xml"
+# The catalog is immutable once published, so a long TTL keeps the number of
+# upstream requests proportional to uptime rather than to visitor count.
+Environment="MFP_CATALOG_TTL=3600"
+Environment="MFP_CATALOG_TIMEOUT=8"
+Environment="MFP_REFRESH_COOLDOWN=60"
+# Debug stays off. The Werkzeug debugger is effectively a remote shell.
+Environment="MFP_DEBUG=0"
+Environment="PORT=8000"
+
+ExecStart=/srv/musicfocus/.venv/bin/gunicorn app:app \
+    --bind 127.0.0.1:8000 \
+    --workers 2 \
+    --threads 4 \
+    --timeout 30 \
+    --access-logfile - \
+    --error-logfile -
+
+Restart=always
+RestartSec=5
+
+# Hardening. The process only ever needs to read its own directory.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/srv/musicfocus
+# episodes.json is only read, so the tree can stay read-only.
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

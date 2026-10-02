@@ -1,0 +1,23 @@
+# Railway picks up the Procfile already in the repo, so there is nothing to
+# configure here beyond:
+#   railway init && railway up
+#
+# Kept as an explicit file so the worker/thread sizing is visible next to the
+# Render and Fly configs rather than living only in the Procfile.
+
+[deploy]
+# Binds to the port Railway injects; PORT is set by the platform.
+startCommand = "gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 30"
+healthcheckPath = "/healthz"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+numReplicas = 1
+
+[env]
+MFP_MANIFEST_URL = "https://musicforprogramming.net/rss.xml"
+MFP_CATALOG_TTL = "3600"
+MFP_CATALOG_TIMEOUT = "8"
+MFP_REFRESH_COOLDOWN = "60"
+MFP_DEBUG = "0"
+PYTHON_VERSION = "3.11.11"

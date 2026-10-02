@@ -1,0 +1,7 @@
+# Only Flask is required at runtime - catalog.py uses the standard library
+# (urllib, xml.etree, email.utils) for fetching and parsing feeds.
+Flask>=3.0,<4.0
+
+# Production WSGI server. Linux/macOS only; it will not run on Windows, which
+# is fine because local dev uses `python app.py`.
+gunicorn>=21.2,<24.0

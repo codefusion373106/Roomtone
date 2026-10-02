@@ -1,0 +1,34 @@
+# Render blueprint - the whole app deploys from this one file.
+#   1. push the repo to GitHub
+#   2. render.com -> New -> Blueprint -> pick the repo
+#   3. add a custom domain afterwards if you own one (Settings -> Custom Domains)
+#
+# Free plan: spins down after 15 minutes idle and takes 30-60s to wake, so the
+# first visitor of the day waits. That is the trade for $0/month.
+services:
+  - type: web
+    name: musicfocus
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    # PORT is injected by Render. Two workers is plenty: each keeps its own
+    # catalog cache, so upstream requests scale with workers, not visitors.
+    startCommand: "gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 30"
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.11"
+      - key: MFP_MANIFEST_URL
+        value: "https://musicforprogramming.net/rss.xml"
+      # Episodes are immutable once published, so an hour is safe.
+      - key: MFP_CATALOG_TTL
+        value: "3600"
+      - key: MFP_CATALOG_TIMEOUT
+        value: "8"
+      # Caps the unauthenticated refresh endpoint at one upstream fetch a minute.
+      - key: MFP_REFRESH_COOLDOWN
+        value: "60"
+      # Must stay 0 in production - the Werkzeug debugger is a remote shell.
+      - key: MFP_DEBUG
+        value: "0"

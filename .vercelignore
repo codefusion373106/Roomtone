@@ -1,0 +1,17 @@
+# Controls what is uploaded to Vercel for the build. vercel.json's excludeFiles
+# trims the function bundle; this keeps the same files out of the upload itself.
+#
+# templates/ and static/css + static/js are deliberately NOT excluded: Flask
+# resolves both from the app module's directory at request time, so dropping
+# them produces pages that work locally and 500 in production.
+
+static/audio/*
+tools/
+deploy/
+tests/
+__pycache__/
+*.pyc
+.git/
+.gitignore
+.env*
+*.md

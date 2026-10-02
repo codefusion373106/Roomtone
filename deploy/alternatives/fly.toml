@@ -1,0 +1,55 @@
+# Fly.io - run it near your listeners for the lowest latency to datashat.net.
+#   fly launch --no-deploy --copy-config
+#   fly deploy
+#   fly certs add yourdomain.com
+#
+# Free allowances have changed several times; check fly.io/docs/pricing before
+# assuming this is still $0.
+app = "musicfocus"
+primary_region = "iad"
+
+[build]
+  builder = "heroku/python"
+
+[env]
+  PORT = "8080"
+  MFP_MANIFEST_URL = "https://musicforprogramming.net/rss.xml"
+  MFP_CATALOG_TTL = "3600"
+  MFP_CATALOG_TIMEOUT = "8"
+  MFP_REFRESH_COOLDOWN = "60"
+  # The Werkzeug debugger is effectively a remote shell, so it must stay off.
+  MFP_DEBUG = "0"
+  PYTHON_VERSION = "3.11.11"
+
+[processes]
+  app = "gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 30"
+
+[[services]]
+  internal_port = 8080
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.concurrency]
+    type = "requests"
+    soft_limit = 40
+    hard_limit = 50
+
+[[http_service.checks]]
+  interval = "30s"
+  timeout = "5s"
+  grace_period = "10s"
+  method = "GET"
+  path = "/healthz"
+
+# Always-on, and it scales to zero if you want to pay only for what you use.
+[autoscaling]
+  min_processes_running = 0
+  processes = ["app"]

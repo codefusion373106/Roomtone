@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "env": {
+    "MFP_MANIFEST_URL": "https://musicforprogramming.net/rss.xml",
+    "MFP_CATALOG_TTL": "3600",
+    "MFP_CATALOG_TIMEOUT": "8",
+    "MFP_REFRESH_COOLDOWN": "60",
+    "MFP_DEBUG": "0"
+  },
+  "functions": {
+    "app.py": {
+      "maxDuration": 30,
+      "excludeFiles": "{tools/**,deploy/**,__pycache__/**,**/*.pyc,.git/**,static/audio/**}"
+    }
+  }
+}
