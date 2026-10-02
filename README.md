@@ -50,6 +50,14 @@ Otherwise the URL resolves for you and 404s for everyone else, with no error.
 Full deployment notes, including Render/Railway/Fly.io fallbacks and a VPS route,
 are in [`deploy/README.md`](deploy/README.md).
 
+`.python-version` has to name a version Vercel still ships, which is the part worth
+watching. Vercel's Python runtime installs dependencies with **uv**, and uv reads
+that file to pick the interpreter. Vercel offers 3.12 (default), 3.13 and 3.14 —
+no 3.11 — so pinning 3.11 fails the build with `No interpreter found for Python
+3.11` before a single dependency is resolved. The pin exists only to stop Vercel
+drifting to a newer default; local dev is unaffected, since `python app.py` runs
+whatever interpreter is on `PATH`.
+
 ## How it stays free
 
 Audio never touches this server. Every episode streams straight from the source
