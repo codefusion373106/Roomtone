@@ -8,6 +8,15 @@
     <title>{{ app_name }}</title>
     <link rel="preconnect" href="https://datashat.net" crossorigin>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K54YS1N99F"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-K54YS1N99F');
+    </script>
 </head>
 <body>
     <div class="grain" aria-hidden="true"></div>
