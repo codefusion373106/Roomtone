@@ -564,53 +564,6 @@ kbd {
 
 .library-stats { padding: 4px 2px 0; border-top: 1px solid var(--line-soft); padding-top: 12px; }
 
-/* ---------------------------------------------------------------- credits */
-
-/* Sits outside .shell on purpose. As a row of that grid it was reachable by the
-   sticky side columns: they travel down to the shell's content box, which is
-   exactly where a final grid row sits, so the library stats - and on short
-   viewports the timer panel - painted straight over this line. */
-.credits {
-  max-width: 1560px;
-  margin: 0 auto;
-  padding: 0 var(--gap) 28px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 10px 26px;
-  border-top: 1px solid var(--line-soft);
-  font-size: 12px;
-  color: var(--ink-faint);
-}
-
-.credits-line {
-  margin: 0;
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-}
-
-.credits-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-  opacity: .7;
-}
-
-.credits-name { color: var(--ink-dim); }
-
-.credits-by { opacity: .7; }
-
-.credits-link {
-  color: var(--ink-dim);
-  text-decoration: none;
-  border-bottom: 1px solid var(--line);
-  transition: color .16s, border-color .16s;
-}
-.credits-link:hover { color: var(--accent); border-color: var(--accent-dim); }
-.credits-link:focus-visible { outline: 2px solid var(--accent-dim); outline-offset: 2px; }
-
 /* ---------------------------------------------------------------- palette */
 
 .cmd-palette {
