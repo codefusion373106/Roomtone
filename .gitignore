@@ -7,3 +7,4 @@ venv/
 # The two fixture MP3s are deliberately not served (app.py blocks
 # /static/audio/), so there is no reason to ship 13 MB of dead audio.
 static/audio/*.mp3
+.vercel
